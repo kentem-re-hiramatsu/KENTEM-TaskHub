@@ -1,0 +1,39 @@
+# dependencies
+/node_modules
+/ksrcMCP/node_modules
+
+## Panda
+styled-system
+styled-system-studio
+
+# next.js
+/.next/
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+## auth
+certificates
+
+# storybook
+*storybook.log
+storybook-static
+
+# env
+.env
+.env.local
+
+# claude
+.claude/settings.local.json
+.claude/CLAUDE.personal.md
+
+# msw
+/public/mockServiceWorker.js
+
+# testing
+/test/playwright-results/
+/test/playwright-report/
+/test/playwright/.cache/
+/test/playwright/.auth/
+/test/*-result.log
