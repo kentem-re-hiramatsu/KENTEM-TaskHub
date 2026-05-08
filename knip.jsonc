@@ -1,0 +1,28 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "ignore": [
+    "ks-react-components/**",
+    "test/e2e/**/*.spec.ts",
+    "test/performance/src/*.ts", //実際には使用されている
+    "/**/*.config*",
+    "test/performance/global-setup.ts", // 使っているが引っかかるため。
+    "public/scripts/validate-cookie.js",
+    "public/pdf.worker.min.mjs", // 使っているが引っかかるため。
+    "mocks/server.ts", // MSWサーバーセットアップ、条件付きで使用
+    "ksrcMCP/**"
+  ],
+  "ignoreBinaries": [
+    "start",
+    "xcopy",
+    "tskill",
+    "move",
+    "magenta,blue",
+    "storybook-static"
+  ],
+  "ignoreDependencies": [
+    "eslint-config-next",
+    "@opentelemetry/exporter-jaeger",
+    "@opentelemetry/winston-transport",
+    "wait-on" // githubActionsのみで利用している。
+  ]
+}
