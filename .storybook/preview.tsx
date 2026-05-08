@@ -9,6 +9,11 @@ const queryClient = new QueryClient({
 
 const preview: Preview = {
   parameters: {
+    options: {
+      storySort: {
+        order: ['components', 'features', 'ks-react-components'],
+      },
+    },
     controls: {
       matchers: {
         color: /(background|color)$/i,

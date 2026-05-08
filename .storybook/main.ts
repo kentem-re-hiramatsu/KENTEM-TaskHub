@@ -35,5 +35,23 @@ const config: StorybookConfig = {
   features: {
     experimentalRSC: true,
   },
+  // biome-ignore lint/style/useNamingConvention: Storybook API key
+  experimental_indexers: async (existingIndexers = []) => {
+    return existingIndexers.map((indexer) => ({
+      ...indexer,
+      createIndex: async (fileName, options) => {
+        const entries = await indexer.createIndex(fileName, options);
+        if (!fileName.includes('ks-react-components')) {
+          return entries;
+        }
+        return entries.map((entry) => ({
+          ...entry,
+          title: entry.title
+            ? `ks-react-components/${entry.title}`
+            : 'ks-react-components',
+        }));
+      },
+    }));
+  },
 };
 export default config;
