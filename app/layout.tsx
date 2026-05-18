@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
+import { Suspense } from 'react';
 import type { ReactNode } from 'react';
 import { css } from 'styled-system/css';
 import { Stack } from 'styled-system/jsx';
@@ -28,17 +29,19 @@ export default function RootLayout({
           <AuthProvider>
             <MswProvider>
               <QueryProvider>
-                <NuqsAdapter>
-                  <Stack h="100svh" gap="0">
-                    <div className={css({ position: 'relative', zIndex: '100' })}>
-                      <Header
-                        logoLink={PAGE_INFO.assignedProjects.url}
-                        items={<HeaderMenu />}
-                      />
-                    </div>
-                    <SidebarLayout>{children}</SidebarLayout>
-                  </Stack>
-                </NuqsAdapter>
+                <Suspense>
+                  <NuqsAdapter>
+                    <Stack h="100svh" gap="0">
+                      <div className={css({ position: 'relative', zIndex: '100' })}>
+                        <Header
+                          logoLink={PAGE_INFO.assignedProjects.url}
+                          items={<HeaderMenu />}
+                        />
+                      </div>
+                      <SidebarLayout>{children}</SidebarLayout>
+                    </Stack>
+                  </NuqsAdapter>
+                </Suspense>
               </QueryProvider>
             </MswProvider>
           </AuthProvider>
