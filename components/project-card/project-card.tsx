@@ -74,7 +74,7 @@ export const ProjectCard = ({
   );
 
   return (
-    <Card header={header} delayed={isDelayed}>
+    <Card header={header}>
       <VStack alignItems="stretch" gap="12px">
         <ProgressBar
           value={actualProgress}

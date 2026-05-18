@@ -1,0 +1,20 @@
+export type WorkerDTO = {
+  id: string;
+  customerId: number;
+  userId: number;
+  name: string;
+  magnetName: string;
+  magnetColor: string;
+  magnetTextColor: string;
+  workerGroupId: string | null;
+  teamId: string | null;
+  teamName: string | null;
+  healthCheckPlannedDate: string | null;
+  healthCheckExpiryDate: string | null;
+  isForeigner: boolean;
+  visaRenewalPlannedDate: string | null;
+  visaExpiryDate: string | null;
+  isKentaikyoTarget: boolean | null;
+  kentaikyoRemarks: string | null;
+  isRetired: boolean;
+};
