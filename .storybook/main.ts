@@ -7,7 +7,11 @@ const config: StorybookConfig = {
   stories: [
     '../components/**/*.stories.{ts,tsx}',
     '../features/**/*.stories.{ts,tsx}',
-    '../ks-react-components/src/stories/**/*.stories.{ts,tsx}',
+    {
+      directory: '../ks-react-components/src/stories',
+      files: '**/*.stories.@(ts|tsx)',
+      titlePrefix: 'ks-react-components',
+    },
   ],
   addons: ['@storybook/addon-vitest', '@storybook/addon-docs'],
   framework: '@storybook/nextjs-vite',
@@ -34,24 +38,6 @@ const config: StorybookConfig = {
   staticDirs: ['..\\public', '..\\ks-react-components\\public'],
   features: {
     experimentalRSC: true,
-  },
-  // biome-ignore lint/style/useNamingConvention: Storybook API key
-  experimental_indexers: async (existingIndexers = []) => {
-    return existingIndexers.map((indexer) => ({
-      ...indexer,
-      createIndex: async (fileName, options) => {
-        const entries = await indexer.createIndex(fileName, options);
-        if (!fileName.includes('ks-react-components')) {
-          return entries;
-        }
-        return entries.map((entry) => ({
-          ...entry,
-          title: entry.title
-            ? `ks-react-components/${entry.title}`
-            : 'ks-react-components',
-        }));
-      },
-    }));
   },
 };
 export default config;

@@ -1,8 +1,6 @@
-export default function Home() {
-  return (
-    <main>
-      <h1>KENTEM TaskHub</h1>
-      <p>環境構築完了。</p>
-    </main>
-  );
-}
+import { redirect } from 'next/navigation';
+import { PAGE_INFO } from '@/constants/url';
+
+const Page = () => redirect(PAGE_INFO.assignedProjects.url);
+
+export default Page;

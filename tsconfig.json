@@ -33,5 +33,12 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
-  "exclude": ["node_modules", "performance", ".next", "mocks", "test/e2e", "ks-react-components"]
+  "exclude": [
+    "node_modules",
+    "performance",
+    ".next",
+    "mocks",
+    "test/e2e",
+    "ks-react-components"
+  ]
 }

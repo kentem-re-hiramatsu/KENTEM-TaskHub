@@ -1,1 +1,19 @@
-@layer reset, base, tokens, recipes, utilities;
+@layer ks_react_components_reset,
+  ks_react_components_base,
+  ks_react_components_tokens,
+  ks_react_components_recipes,
+  ks_react_components_utilities;
+
+@keyframes projectCardSkeletonShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

@@ -6,7 +6,11 @@ const globalCss = defineGlobalStyles({
     margin: 0,
     fontSize: '16px',
     fontWeight: 500,
-    backgroundColor: 'ksTheme.background',
+    backgroundColor: 'app.bg',
+    color: 'app.text',
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif',
+    colorScheme: 'light dark',
+    transition: 'background-color 0.2s ease, color 0.2s ease',
   },
   a: {
     color: 'inherit',
@@ -14,6 +18,8 @@ const globalCss = defineGlobalStyles({
   },
   '*': {
     boxSizing: 'border-box',
+    scrollbarWidth: 'thin',
+    scrollbarColor: 'token(colors.app.scrollbar) transparent',
   },
   button: {
     padding: 0,
@@ -32,152 +38,280 @@ const globalCss = defineGlobalStyles({
     color: 'inherit',
   },
   textarea: {
-    fontFamily: 'inherit'
-  }
+    fontFamily: 'inherit',
+  },
+  // iOS風スクロールバー
+  '::-webkit-scrollbar': {
+    width: '6px',
+    height: '6px',
+  },
+  '::-webkit-scrollbar-track': {
+    background: 'transparent',
+  },
+  '::-webkit-scrollbar-thumb': {
+    background: 'app.scrollbar',
+    borderRadius: '999px',
+  },
+  '::-webkit-scrollbar-thumb:hover': {
+    background: 'app.scrollbarHover',
+  },
+  // Firefox scrollbar (merged with box-sizing rule above via the '*' key already defined)
 })
 
 const keyframes = defineKeyframes({
-  outline:{'50%':{boxShadow: '0 0 2px 2px turquoise'}},
-  loading:{
-    '0%':{strokeDashoffset:'400px',fill:'transparent' },
-    '80%':{strokeDashoffset:'0', fill:'transparent'},
-    '90%':{strokeDashoffset:'0',fill:'ksTheme.primary'},
-    '100%':{strokeDashoffset:'0',fill:'ksTheme.primary'}
+  outline: { '50%': { boxShadow: '0 0 2px 2px turquoise' } },
+  loading: {
+    '0%': { strokeDashoffset: '400px', fill: 'transparent' },
+    '80%': { strokeDashoffset: '0', fill: 'transparent' },
+    '90%': { strokeDashoffset: '0', fill: 'app.primary' },
+    '100%': { strokeDashoffset: '0', fill: 'app.primary' },
   },
   dotsLoader: {
-    'from': { clipPath: 'inset(0 100% 0 0)' },
-    'to': { clipPath: 'inset(0 -34% 0 0)' },
-  }
+    from: { clipPath: 'inset(0 100% 0 0)' },
+    to: { clipPath: 'inset(0 -34% 0 0)' },
+  },
+  shimmer: {
+    '0%': { backgroundPosition: '200% 0' },
+    '100%': { backgroundPosition: '-200% 0' },
+  },
+  wiggle: {
+    '0%, 100%': { transform: 'rotate(0deg)' },
+    '25%': { transform: 'rotate(1deg)' },
+    '75%': { transform: 'rotate(-1deg)' },
+  },
+  slideInRight: {
+    from: { transform: 'translateX(100%)' },
+    to: { transform: 'translateX(0)' },
+  },
+  fadeIn: {
+    from: { opacity: '0' },
+    to: { opacity: '1' },
+  },
 })
-
 
 export default defineConfig({
   globalCss,
 
-  // Where to look for your css declarations
   include: [
     "./app/**/*.{ts,tsx}",
     './components/**/*.{ts,tsx}',
     './features/**/*.{ts,tsx}',
-    './ks-react-components/src/**/*.{ts,tsx}'
+    './ks-react-components/src/**/*.{ts,tsx}',
   ],
-  // Files to exclude
-  exclude: [],
+  exclude: [
+    './app/api/**/*.{ts,tsx}',
+  ],
 
-  // Useful for theme customization
   theme: {
     extend: {
       semanticTokens: {
         colors: {
-          ksTheme: {
+          // iOS-inspired design tokens with dark mode support
+          app: {
+            // Primary: iOS System Green
             primary: {
-              DEFAULT: { value: '#2E7D32' },
-              container: { value: '#A3F69C' },
-              press: { value: '#1B6D24' },
+              DEFAULT: {
+                value: { base: '#28A745', _dark: '#30D158' },
+              },
+              pressed: {
+                value: { base: '#1E8C3A', _dark: '#24A042' },
+              },
+              subtle: {
+                value: { base: '#D1F5DC', _dark: '#0D3320' },
+              },
+              text: {
+                value: { base: '#FFFFFF', _dark: '#000000' },
+              },
             },
-            secondary: {
-              DEFAULT: { value: '#84967F' },
-              container: { value: '#D6E8CE' },
-              press: { value: '#B4D2A7' },
+            // Backgrounds
+            bg: {
+              value: { base: '#F2F2F7', _dark: '#1C1C1E' },
             },
-            tertiary: {
-              DEFAULT: { value: '#6B989D' },
-              container: { value: '#BCEBF0' },
+            bgElevated: {
+              value: { base: '#FFFFFF', _dark: '#2C2C2E' },
             },
+            bgElevated2: {
+              value: { base: '#F2F2F7', _dark: '#3A3A3C' },
+            },
+            // Text
             text: {
-              active: { value: '#000000DE' },
-              inactive: { value: '#00000099' },
-              disabled: { value: '#00000061' },
-              onFill: { value: '#FFFFFF' },
-              link: { value: '#3979CE' },
-              hover: { value: '#7AA9E8' },
-              linkActive: { value: '#7AA9E8' },
-              visited: { value: '#551A8B' },
+              value: { base: '#000000', _dark: '#FFFFFF' },
             },
-            background: {
-              DEFAULT: { value: '#FCFDF6' },
-              onBackground: { value: '#1A1C19' },
-              surface: { value: '#FCFDF6' },
-              surfaceVariant: { value: '#DEE5D8' },
-              disabledBack: { value: '#EBEBEB' },
+            textSecondary: {
+              value: { base: '#3C3C43CC', _dark: '#EBEBF599' },
+            },
+            textTertiary: {
+              value: { base: '#3C3C4399', _dark: '#EBEBF566' },
+            },
+            textDisabled: {
+              value: { base: '#3C3C4361', _dark: '#EBEBF529' },
+            },
+            textLink: {
+              value: { base: '#007AFF', _dark: '#0A84FF' },
+            },
+            // Separators / Borders
+            separator: {
+              value: { base: '#3C3C434A', _dark: '#5454584A' },
             },
             border: {
-              outline: { value: '#D6D6D6' },
-              divider: { value: '#D6D6D6' },
-              disabled: { value: '#D6D6D6' },
-              focused: { value: '#3979CE' },
-              selected: { value: '#3979CE' },
-              alert: { value: '#BA1A1A' },
+              value: { base: '#D1D1D6', _dark: '#3A3A3C' },
             },
-            status: {
-              alert: {
-                DEFAULT: { value: '#BA1A1A' },
-                container: { value: '#FFDAD6' },
-                press: { value: '#A60A0A' },
-                pressContainer: { value: '#EEB6B0' },
+            borderFocused: {
+              value: { base: '#007AFF', _dark: '#0A84FF' },
+            },
+            borderError: {
+              value: { base: '#FF3B30', _dark: '#FF453A' },
+            },
+            // Fill colors
+            fill: {
+              value: { base: '#78788033', _dark: '#7878804A' },
+            },
+            fillSecondary: {
+              value: { base: '#7878802E', _dark: '#78788045' },
+            },
+            // Status
+            error: {
+              DEFAULT: {
+                value: { base: '#FF3B30', _dark: '#FF453A' },
               },
-              warning: {
-                DEFAULT: { value: '#FFCB11' },
-                container: { value: '#FFEFCE' },
-                containerPress: { value: '#FFE08E' },
-                onWarning: { value: '#755B00' },
+              subtle: {
+                value: { base: '#FFE5E3', _dark: '#3D0A08' },
               },
             },
-            table: {
-              listThBg: { value: '#E9E9E9' },
-              listThBg2: { value: '#F2F2F2' },
-              listTdBg: { value: '#FAFAFA' },
-              listTdBg2: { value: '#ECF3E6' },
-              listSelected: { value: '#F6FFF0' },
-              actionBg: { value: '#D6D6D6' },
-              saturdayBg: { value: '#DEF1FF' },
-              sundayBg: { value: '#FFDAD6' },
+            warning: {
+              DEFAULT: {
+                value: { base: '#FF9500', _dark: '#FF9F0A' },
+              },
+              subtle: {
+                value: { base: '#FFF3E0', _dark: '#3D2300' },
+              },
+            },
+            success: {
+              DEFAULT: {
+                value: { base: '#34C759', _dark: '#30D158' },
+              },
+              subtle: {
+                value: { base: '#E8FBEd', _dark: '#0A2D15' },
+              },
+            },
+            info: {
+              DEFAULT: {
+                value: { base: '#007AFF', _dark: '#0A84FF' },
+              },
+              subtle: {
+                value: { base: '#E5F2FF', _dark: '#001C3D' },
+              },
+            },
+            // Scrollbar
+            scrollbar: {
+              value: { base: 'rgba(0,0,0,0.18)', _dark: 'rgba(255,255,255,0.18)' },
+            },
+            scrollbarHover: {
+              value: { base: 'rgba(0,0,0,0.32)', _dark: 'rgba(255,255,255,0.32)' },
+            },
+            // Legacy ksTheme aliases (keep for files not yet migrated)
+            ksTheme: {
+              primary: {
+                DEFAULT: { value: { base: '#34C759', _dark: '#30D158' } },
+                container: { value: { base: '#D1F5DC', _dark: '#0D3320' } },
+              },
+              text: {
+                active: { value: { base: '#000000', _dark: '#FFFFFF' } },
+                inactive: { value: { base: '#3C3C43CC', _dark: '#EBEBF599' } },
+                disabled: { value: { base: '#3C3C4361', _dark: '#EBEBF529' } },
+                link: { value: { base: '#007AFF', _dark: '#0A84FF' } },
+                hover: { value: { base: '#0A84FF', _dark: '#409CFF' } },
+              },
+              background: {
+                DEFAULT: { value: { base: '#F2F2F7', _dark: '#1C1C1E' } },
+                surface: { value: { base: '#FFFFFF', _dark: '#2C2C2E' } },
+                surfaceVariant: { value: { base: '#F2F2F7', _dark: '#3A3A3C' } },
+                disabledBack: { value: { base: '#EBEBEB', _dark: '#2C2C2E' } },
+                canvas: { value: { base: '#F2F2F7', _dark: '#1C1C1E' } },
+                white: { value: { base: '#FFFFFF', _dark: '#2C2C2E' } },
+                onBackground: { value: { base: '#1A1C19', _dark: '#F2F2F7' } },
+              },
+              border: {
+                outline: { value: { base: '#D1D1D6', _dark: '#3A3A3C' } },
+                divider: { value: { base: '#D1D1D6', _dark: '#3A3A3C' } },
+                disabled: { value: { base: '#D1D1D6', _dark: '#3A3A3C' } },
+                focused: { value: { base: '#007AFF', _dark: '#0A84FF' } },
+                selected: { value: { base: '#007AFF', _dark: '#0A84FF' } },
+                alert: { value: { base: '#FF3B30', _dark: '#FF453A' } },
+              },
+              status: {
+                alert: {
+                  DEFAULT: { value: { base: '#FF3B30', _dark: '#FF453A' } },
+                  container: { value: { base: '#FFE5E3', _dark: '#3D0A08' } },
+                },
+                warning: {
+                  DEFAULT: { value: { base: '#FF9500', _dark: '#FF9F0A' } },
+                },
+              },
+              table: {
+                listThBg: { value: { base: '#E9E9E9', _dark: '#2C2C2E' } },
+                listThBg2: { value: { base: '#F2F2F2', _dark: '#3A3A3C' } },
+                listTdBg: { value: { base: '#FAFAFA', _dark: '#2C2C2E' } },
+                listTdBg2: { value: { base: '#F0FBF3', _dark: '#0D3320' } },
+                listSelected: { value: { base: '#F0FBF3', _dark: '#0D3320' } },
+                actionBg: { value: { base: '#D6D6D6', _dark: '#3A3A3C' } },
+                saturdayBg: { value: { base: '#DEF1FF', _dark: '#001A33' } },
+                sundayBg: { value: { base: '#FFE5E3', _dark: '#3D0A08' } },
+              },
             },
           },
         },
       },
-      tokens:{
-        fonts:{
-          notoSansJP: { value:'var(--font-noto-sans-jp)' },
+      tokens: {
+        fonts: {
+          notoSansJP: { value: 'var(--font-noto-sans-jp)' },
         },
-        animations:{
-          outline: { value:'outline 1s ease-in-out' },
+        animations: {
+          outline: { value: 'outline 1s ease-in-out' },
         },
-        zIndex: {  
-          // 相対的なz-index（コンポーネント内）- シンプルな値のみ
+        radii: {
+          ios: { value: '12px' },
+          iosSm: { value: '8px' },
+          iosXs: { value: '6px' },
+        },
+        zIndex: {
           relative: {
-            hide: { value: '-1' },             // 背面（背景用）
-            front: { value: '1' },             // 前面（軽微な重なり）
+            hide: { value: '-1' },
+            front: { value: '1' },
           },
           whiteboard: {
             list: {
               header: { value: '2' },
               selected: { value: '1' },
             },
-            scheduleItem: {
-              DEFAULT: { value: '1' },
-              arrow: { value: '1' },
-              comment: { value: '1' },
-              selected: { value: '4' },
-              controller: { value: '2' },
-              menu: { value: '4' },
-              leftTriangle: { value: '1' },
-            },
             header: { value: '2' },
             body: {
               title: { value: '1' },
               outsideSchedule: { value: '1' },
             },
-            magnet: { value: '1' },
-            stickyNote: {
-              DEFAULT : { value: '3' },
-              selected: { value: '4' },
-            },
           },
-        }
+        },
       },
-      keyframes
+      keyframes,
     },
+  },
+
+  conditions: {
+    extend: {
+      dark: '[data-theme="dark"] &',
+      light: '[data-theme="light"] &',
+    },
+    ksHover: '&:not(:disabled):hover',
+    ksGroupHover: '.group:not(:disabled):hover &',
+    ksFocus: '&:is(:not(:disabled):hover:focus, :focus)',
+    ksFocusWithin: '&:is(:not(:disabled):hover:focus-within, :focus-within)',
+    ksFocusVisible: '&:is(:not(:disabled):hover:focus-visible, :focus-visible)',
+    ksFocusVisibleWithin: '&:has( :is(:not(:disabled):hover:focus-visible, :focus-visible))',
+    ksGroupFocus: '.group:is(:not(:disabled):hover:focus, :focus) &',
+    ksGroupFocusVisible: '.group:is(:not(:disabled):hover:focus-visible, :focus-visible) &',
+    ksActive: '&:is(:not(:disabled):hover:active, :focus:active, :focus-visible:active, :focus-within:active, :not(:disabled):active)',
+    ksGroupActive: '.group:is(:not(:disabled):hover:active, :focus:active, :focus-visible:active, :focus-within:active, :not(:disabled):active) &',
+    msReveal: '&::-ms-reveal',
   },
 
   utilities: {
@@ -196,32 +330,13 @@ export default defineConfig({
     },
   },
 
-  conditions: {
-    ksHover: '&:not(:disabled):hover',
-    ksGroupHover: '.group:not(:disabled):hover &',
-    ksFocus: '&:is(:not(:disabled):hover:focus, :focus)',
-    ksFocusWithin: '&:is(:not(:disabled):hover:focus-within, :focus-within)',
-    ksFocusVisible: '&:is(:not(:disabled):hover:focus-visible, :focus-visible)',
-    ksFocusVisibleWithin:
-      '&:has( :is(:not(:disabled):hover:focus-visible, :focus-visible))',
-    ksGroupFocus: '.group:is(:not(:disabled):hover:focus, :focus) &',
-    ksGroupFocusVisible:
-      '.group:is(:not(:disabled):hover:focus-visible, :focus-visible) &',
-    ksActive:
-      '&:is(:not(:disabled):hover:active, :focus:active, :focus-visible:active, :focus-within:active, :not(:disabled):active)',
-    ksGroupActive:
-      '.group:is(:not(:disabled):hover:active, :focus:active, :focus-visible:active, :focus-within:active, :not(:disabled):active) &',
-    msReveal: '&::-ms-reveal',
-  },
-
-  // The output directory for your css system
   outdir: "styled-system",
   layers: {
-    "reset": "ks_react_components_reset",
-    "base": "ks_react_components_base",
-    "tokens": "ks_react_components_tokens",
-    "recipes": "ks_react_components_recipes",
-    "utilities": "ks_react_components_utilities",
+    reset: "ks_react_components_reset",
+    base: "ks_react_components_base",
+    tokens: "ks_react_components_tokens",
+    recipes: "ks_react_components_recipes",
+    utilities: "ks_react_components_utilities",
   },
   jsxFramework: 'react',
 });

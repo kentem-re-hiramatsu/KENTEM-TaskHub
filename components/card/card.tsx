@@ -51,11 +51,11 @@ const containerStyle = cva({
   base: {
     boxSizing: 'border-box',
     p: '16px',
-    bgColor: 'ksTheme.text.onFill',
+    bgColor: 'app.bgElevated',
     rounded: '12px',
     borderWidth: '1px',
     borderStyle: 'solid',
-    borderColor: 'ksTheme.border.divider',
+    borderColor: 'app.separator',
     boxShadow: '0 6px 16px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.06)',
     transition: 'transform 120ms ease-out, box-shadow 120ms ease-out',
   },
