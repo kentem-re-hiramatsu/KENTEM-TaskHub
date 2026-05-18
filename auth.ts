@@ -7,7 +7,6 @@ const REQUIRED_ORG_KEYWORD = 'kentem';
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET ?? 'dev-only-secret-change-me',
-  trustHost: true,
   providers: [
     GitHubProvider({
       clientId: process.env.GITHUB_CLIENT_ID ?? '',
